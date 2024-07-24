@@ -1,0 +1,27 @@
+{
+  "name": "linewebhook",
+  "version": "1.0.0",
+  "description": "this is a wed web hook ilnebot",
+  "main": "index.js",
+  "engines": {
+    "node": "10"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev":"nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "line",
+    "chat",
+    "bot"
+  ],
+  "author": "nattavut",
+  "license": "ISC",
+  "dependencies": {
+    "actions-on-google": "^2.2.0",
+    "dialogflow-fulfillment": "^0.6.1",
+    "expass": "^1.1.4",
+    "express": "^4.19.2"
+  }
+}
