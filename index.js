@@ -3,10 +3,10 @@ const bodyParser = require("body-parser");
 const { WebhookClient, Payload } = require("dialogflow-fulfillment");
 const port = 4000;
 
-//create server
+// Create server
 const app = express();
 
-//middleware
+// Middleware
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
@@ -14,16 +14,11 @@ app.get("/", (req, res) => {
 });
 
 app.post("/webhook", (req, res) => {
-  //create webhook client
+  // Create webhook client
   const agent = new WebhookClient({
     request: req,
     response: res,
   });
-
-  // console.log(
-  //     "Dialogflow Request headers: " + JSON.stringify(req.headers)
-  // );
-  // console.log("Dialogflow Request body: " + JSON.stringify(req.body));
 
   function welcome(agent) {
     agent.add(`Welcome to my agent!`);
@@ -143,13 +138,98 @@ app.post("/webhook", (req, res) => {
 
     let payload = new Payload("LINE", flexMessage, { sendAsMessage: true });
     agent.add(payload);
-    // agent.add(result);
+  }
+
+  function calculateSquareArea(agent) {
+    let width = agent.parameters.width;
+    let height = agent.parameters.height;
+    let result = width * height;
+
+    const flexMessage = {
+      type: "flex",
+      altText: "Flex Message",
+      contents: {
+        type: "bubble",
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: `The area of the square is ${result} square units.`,
+              size: "sm",
+            },
+          ],
+        },
+      },
+    };
+
+    let payload = new Payload("LINE", flexMessage, { sendAsMessage: true });
+    agent.add(payload);
+  }
+
+  function calculateCircleArea(agent) {
+    let radius = agent.parameters.radius;
+    let result = (Math.PI * Math.pow(radius, 2)).toFixed(2);
+
+    const flexMessage = {
+      type: "flex",
+      altText: "Flex Message",
+      contents: {
+        type: "bubble",
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: `The area of the circle is ${result} square units.`,
+              size: "sm",
+            },
+          ],
+        },
+      },
+    };
+
+    let payload = new Payload("LINE", flexMessage, { sendAsMessage: true });
+    agent.add(payload);
+  }
+
+  function calculateTriangleArea(agent) {
+    let base = agent.parameters.base;
+    let height = agent.parameters.height;
+    let result = (0.5 * base * height).toFixed(2);
+
+    const flexMessage = {
+      type: "flex",
+      altText: "Flex Message",
+      contents: {
+        type: "bubble",
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: `The area of the triangle is ${result} square units.`,
+              size: "sm",
+            },
+          ],
+        },
+      },
+    };
+
+    let payload = new Payload("LINE", flexMessage, { sendAsMessage: true });
+    agent.add(payload);
   }
 
   let intentMap = new Map();
   intentMap.set("Default Welcome Intent", welcome);
   intentMap.set("Default Fallback Intent", fallback);
   intentMap.set("BMI - custom - yes", bodyMassIndex);
+  intentMap.set("find area - square - custom - yes", calculateSquareArea);
+  intentMap.set("find area - circle - custom - yes", calculateCircleArea);
+  intentMap.set("find area - triangle - custom - yes", calculateTriangleArea);
   agent.handleRequest(intentMap);
 });
 
